@@ -8,7 +8,6 @@
 [Dd]ebug*/
 [Rr]elease*/
 node_modules*/
-dist/*
 npm-debug.log
 packages*/
 **/.idea/*

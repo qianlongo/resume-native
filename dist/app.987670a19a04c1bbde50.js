@@ -63,11 +63,93 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _styles2 = __webpack_require__(2);
+
+var _styles3 = _interopRequireDefault(_styles2);
+
+var _dom = __webpack_require__(3);
+
+var _dom2 = _interopRequireDefault(_dom);
+
+var _prismjs = __webpack_require__(4);
+
+var _prismjs2 = _interopRequireDefault(_prismjs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var $ = _dom2.default.$,
+    html = _dom2.default.html;
+
+var _styles = _slicedToArray(_styles3.default, 1),
+    style0 = _styles[0];
+
+var delay = 1;
+var index = 0;
+var sHtml = '';
+var timer = null;
+
+var $stylesWrap = $('#app .styles-wrap')[0];
+var $style = $('style', $stylesWrap)[0];
+var $stylePre = $('pre', $stylesWrap)[0];
+
+var goBottom = function goBottom() {
+  $stylesWrap.scrollTop = 10000;
+};
+
+var showStyles = function showStyles() {
+  timer = setInterval(function () {
+    var char = style0.substring(index, index + 1);
+    sHtml += char;
+    if (sHtml.length === style0.length) {
+      clearInterval(timer);
+    } else {
+      // if (style0.substring(index, index - 1)=== '\n') {
+      goBottom();
+      // }
+      html($style, sHtml);
+      html($stylePre, _prismjs2.default.highlight(sHtml, _prismjs2.default.languages.css));
+      index++;
+    }
+  }, delay);
+};
+
+module.exports = {
+  showStyles: showStyles
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _stylesEditor = __webpack_require__(0);
+
+var _stylesEditor2 = _interopRequireDefault(_stylesEditor);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+console.log(_stylesEditor2.default);
+var showStyles = _stylesEditor2.default.showStyles;
+
+
+showStyles();
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -81,7 +163,7 @@ var styles = ["\n/*\n* Inspired by http://strml.net/\n* \u5927\u5BB6\u597D\uFF0C
 exports.default = styles;
 
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -112,7 +194,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -911,60 +993,10 @@ Prism.languages.js = Prism.languages.javascript;
 
 })();
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _styles2 = __webpack_require__(0);
-
-var _styles3 = _interopRequireDefault(_styles2);
-
-var _dom = __webpack_require__(1);
-
-var _dom2 = _interopRequireDefault(_dom);
-
-var _prismjs = __webpack_require__(2);
-
-var _prismjs2 = _interopRequireDefault(_prismjs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var $ = _dom2.default.$,
-    html = _dom2.default.html;
-
-var _styles = _slicedToArray(_styles3.default, 1),
-    style0 = _styles[0];
-
-var delay = 1;
-var index = 0;
-var sHtml = '';
-var timer = null;
-
-var $stylesWrap = $('#app .styles-wrap')[0];
-var $style = $('style', $stylesWrap)[0];
-var $stylePre = $('pre', $stylesWrap)[0];
-
-timer = setInterval(function () {
-  var char = style0.substring(index, index + 1);
-  sHtml += char;
-  if (sHtml.length === style0.length) {
-    clearInterval(timer);
-  } else {
-    html($style, sHtml);
-    html($stylePre, _prismjs2.default.highlight(sHtml, _prismjs2.default.languages.css));
-    index++;
-  }
-}, delay);
-
-/***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 var g;

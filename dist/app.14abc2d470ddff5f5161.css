@@ -10,3 +10,12 @@
 
 *::after {
   box-sizing: border-box; }
+
+.htmlMode {
+  animation: flip 2s; }
+
+@keyframes flip {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }

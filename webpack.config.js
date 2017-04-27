@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 // const args = process.argv
 // const debug = args.indexOf('--debug') > -1
 // const build = args.indexOf('--build') > -1
-const build = true
+const build = false
 const output = {
   path: path.resolve(__dirname, './dist'),
   filename: '[name].[hash].js'

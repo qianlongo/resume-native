@@ -28,7 +28,7 @@ if (build) {
 module.exports = {
   context: path.resolve(__dirname, './lib'),
   entry: {
-    app: './app.js'
+    app: ['babel-regenerator-runtime', './app.js']
   },
   output: output,
   module: {

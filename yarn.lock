@@ -561,6 +561,10 @@ babel-preset-es2015@^6.24.0:
     babel-plugin-transform-es2015-unicode-regex "^6.24.1"
     babel-plugin-transform-regenerator "^6.24.1"
 
+babel-regenerator-runtime@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/babel-regenerator-runtime/-/babel-regenerator-runtime-6.5.0.tgz#0e41cd1c9f80442466f015c749fff8ba98f8e110"
+
 babel-register@^6.24.1:
   version "6.24.1"
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.24.1.tgz#7e10e13a2f71065bdfad5a1787ba45bca6ded75f"

@@ -17,6 +17,7 @@
   "devDependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.1",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-es2015": "^6.24.0",
     "babel-regenerator-runtime": "^6.5.0",
     "css-loader": "^0.27.3",
@@ -33,5 +34,8 @@
   },
   "pre-commit": [
     "lint"
-  ]
+  ],
+  "standard": {
+    "ignore": "dist"
+  }
 }

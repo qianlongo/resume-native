@@ -32,5 +32,8 @@
   },
   "pre-commit": [
     "lint"
-  ]
+  ],
+  "standard": {
+    "ignore": "dist"
+  }
 }

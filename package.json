@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "clean": "sudo rm -rf dist/*",
-    "dev": "webpack-dev-server --debug",
+    "dev": "npm run build && webpack-dev-server --debug",
     "build": "npm run clean && webpack",
     "lint": "standard",
     "validate": "npm ls"
   },
-  "main": "index.js",
+  "main": "app.js",
   "author": "qianlongo",
   "license": "MIT",
   "dependencies": {
@@ -30,6 +30,11 @@
     "standard": "^9.0.2",
     "style-loader": "^0.16.1",
     "webpack-dev-server": "^2.4.2"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "standard": {
+    "ignore": "dist"
   }
-  
 }

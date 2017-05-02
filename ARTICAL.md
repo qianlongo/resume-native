@@ -37,6 +37,7 @@
 2. 使用yarn来处理依赖包的管理
 3. 使用es6的写法
 4. 使用部分原生dom操作api
+5. standard.js(代码风格约束利器)
 
 目录结构如下
 
@@ -44,3 +45,154 @@
 
 最重要的几个模块分别是`resumeEditor(简历编辑模块)` 、 `stylesEditor(简历样式编辑模块)` 、 `以及vQuery(封装的dom操作模块)`
 最后`app.js(入口模块)`再将几个模块的功能结合起来完成整个项目。
+
+## 以及vQuery(封装的dom操作模块)
+
+> 因为后面的几个模块都要依赖这个小模块，所以我们先简单的看下。
+
+
+``` javascript
+class Vquery {
+  constructor (selector, context) {
+    this.elements = getEles(selector, context)
+  }
+
+  optimizeCb (callback) {
+    ...
+  }
+
+  get (index) {
+    ...
+  }
+
+  html (sHtml) {
+    ...
+  }
+
+  addClass (iClass) {
+    ...
+  }
+
+  css (styles) {
+    ...
+  }
+
+  height (h) {
+    ...
+  }
+
+  scrollTop (top) {
+    ...
+  }
+}
+
+export default (selector, context) => {
+  return new Vquery(selector, context)
+}
+
+
+```
+
+**可以看出它做的事就是封装一个构造函数Vquery，它的实例会有一些简单的dom操作方法，最后为了能够像jQuery那样使用$().funcName的形式去使用，我们导出了一个匿名函数，在匿名函数中去new Vquery**
+
+### stylesEditor(简历样式编辑模块)
+
+> 简历所展现的布局效果都是由这个模块完成的,核心方式是showStyles。
+
+``` javascript
+const showStyles = (num, callback) => {
+  let style = styles[num]
+  let length
+  let prevLength
+
+  if (!style) {
+    return
+  }
+
+  length = styles.filter((item, i) => { // 计算数组styles前n个元素的长度
+    return i <= num
+  }).reduce((result, item) => {
+    result += item.length
+    return result
+  }, 0)
+
+  prevLength = length - style.length
+
+  clearInterval(timer)
+  timer = setInterval(() => {
+    let start = currentStyle.length - prevLength
+    let char = style.substring(start, start + 1) || ''
+    currentStyle += char
+    if (currentStyle.length === length) { // 数组styles前n个元素已经全部塞入，则关闭定时器，并且执行外面传进来的回调，进而执行下一步操作
+      clearInterval(timer)
+      callback && callback()
+    } else {
+      let top = $stylePre.height() - MAX_HEIGHT
+      if (top > 0) { // 当塞入的内容已经操作了容器的高度，我们需要设置一下滚动距离才方便演示接下来的内容
+        goBottom(top)
+      }
+      $style.html(currentStyle)
+      $stylePre.html(Prism.highlight(currentStyle, Prism.languages.css))
+    }
+  }, delay)
+}
+
+
+```
+## stylesEditor(简历样式编辑模块)
+
+> 简历编辑模块用来展示简历内容，主要会经历由markdown格式往html页面形式的转换。
+
+```
+const markdownToHtml = (callback) => {
+  $resumeMarkdown.css({
+    display: 'none'
+  })
+  $resumeWrap.addClass(iClass)
+  $resumetag.html(marked(resumeMarkdown)) // 借助marked工具将markdown转化为html
+  callback && callback() // 执行后续的回调
+}
+
+const showResume = (callback) => { // 原理基本上同stylesEditor， 不断地往简历编辑的容器中塞入事先准备好的简历内容，当全部塞入的时候再关闭定时器，并执行后续的回调操作
+  clearInterval(timer)
+  timer = setInterval(() => {
+    currentMarkdown += resumeMarkdown.substring(start, start + 1)
+    if (currentMarkdown.length === length) {
+      clearInterval(timer)
+      callback && callback()
+    } else {
+      $resumeMarkdown.html(currentMarkdown)
+      start++
+    }
+  }, delay)
+}
+
+```
+
+## app(入口模块)
+
+> 最后由app入口模块将以上几个模块整合完成项目的功能，我们找出其中的核心代码来, 😀，你没看错，传说中的回调地狱，亮瞎了我的狗眼啊。想必大家和我一样都是不愿意看到这坨恶心的代码的，单对于处理异步问题，回调又的确是一直以来的解决方案之一。
+
+**因为定时器的操作是异步行为，而我们的简历生成过程会涉及到多个异步操作，所以为了看到如首页预览页面的效果，必须等前一个步骤完成之后，才能执行下一步步骤，这里首先使用的回调函数的解决方案，大家可以从github上拉取代码，分别切换以下几个分支来查看不同的解决方案**
+
+1. master(使用回调函数处理)
+2. promise(使用promise处理)
+3. generator-thunk(使用generator + thunk函数处理)
+4. generator-promise(使用generator + promise处理)
+5. async(使用async处理)
+
+![](http://odssgnnpf.bkt.clouddn.com/400-5.jpg)
+
+```javascript
+showStyles(0, () => {
+  showResume(() => {
+    showStyles(1, () => {
+      markdownToHtml(() => {
+        showStyles(2)
+      })
+    })
+  })
+})
+
+
+```

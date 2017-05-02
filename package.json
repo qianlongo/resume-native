@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "clean": "sudo rm -rf dist/*",
-    "dev": "webpack-dev-server --debug",
+    "dev": "npm run build && webpack-dev-server --debug",
     "build": "npm run clean && webpack",
     "lint": "standard",
     "validate": "npm ls"
   },
-  "main": "index.js",
+  "main": "app.js",
   "author": "qianlongo",
   "license": "MIT",
   "dependencies": {

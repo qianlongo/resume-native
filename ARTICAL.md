@@ -46,7 +46,7 @@
 最重要的几个模块分别是`resumeEditor(简历编辑模块)` 、 `stylesEditor(简历样式编辑模块)` 、 `以及vQuery(封装的dom操作模块)`
 最后`app.js(入口模块)`再将几个模块的功能结合起来完成整个项目。
 
-## 以及vQuery(封装的dom操作模块)
+## vQuery(封装的dom操作模块)
 
 > 因为后面的几个模块都要依赖这个小模块，所以我们先简单的看下。
 
@@ -97,7 +97,7 @@ export default (selector, context) => {
 
 ### stylesEditor(简历样式编辑模块)
 
-> 简历所展现的布局效果都是由这个模块完成的,核心方式是showStyles。
+> 简历所展现的布局效果都是由这个模块完成的,核心方法是showStyles。
 
 ``` javascript
 const showStyles = (num, callback) => {
@@ -128,7 +128,7 @@ const showStyles = (num, callback) => {
       callback && callback()
     } else {
       let top = $stylePre.height() - MAX_HEIGHT
-      if (top > 0) { // 当塞入的内容已经操作了容器的高度，我们需要设置一下滚动距离才方便演示接下来的内容
+      if (top > 0) { // 当塞入的内容已经超过了容器的高度，我们需要设置一下滚动距离才方便演示接下来的内容
         goBottom(top)
       }
       $style.html(currentStyle)
@@ -171,9 +171,9 @@ const showResume = (callback) => { // 原理基本上同stylesEditor， 不断�
 
 ## app(入口模块)
 
-> 最后由app入口模块将以上几个模块整合完成项目的功能，我们找出其中的核心代码来, 😀，你没看错，传说中的回调地狱，亮瞎了我的狗眼啊。想必大家和我一样都是不愿意看到这坨恶心的代码的，单对于处理异步问题，回调又的确是一直以来的解决方案之一。
+> 最后由app入口模块将以上几个模块整合完成项目的功能，我们找出其中的核心代码来, 😀，你没看错，传说中的回调地狱，亮瞎了我的狗眼啊。想必大家和我一样都是不愿意看到这坨恶心的代码的，但对于处理异步问题，回调又的确是一直以来的解决方案之一。
 
-**因为定时器的操作是异步行为，而我们的简历生成过程会涉及到多个异步操作，所以为了看到如首页预览页面的效果，必须等前一个步骤完成之后，才能执行下一步步骤，这里首先使用的回调函数的解决方案，大家可以从github上拉取代码，分别切换以下几个分支来查看不同的解决方案**
+**因为定时器的操作是异步行为，而我们的简历生成过程会涉及到多个异步操作，所以为了看到如首页预览链接的效果，必须等前一个步骤完成之后，才能执行下一步步骤，这里首先使用的回调函数的解决方案，大家可以从github上拉取代码，分别切换以下几个分支来查看不同的解决方案**
 
 1. master(使用回调函数处理)
 2. promise(使用promise处理)
@@ -196,3 +196,157 @@ showStyles(0, () => {
 
 
 ```
+
+## 解决回调地狱之promise
+
+> 回调方式能够解决异步操作问题，但是代码写起来非常的不美观，可读性差，代码呈横向发展趋势...伟大的程序员们开疆扩土发明了promise的解决方案。我们来看一下promise分支中app模块最终的写法
+
+``` javascript
+showStylesWrap(0)
+  .then(showResumeWrap)
+  .then(showStylesWrap.bind(null, 1))
+  .then(markdownToHtmlWrap)
+  .then(showStylesWrap.bind(null, 2))
+
+```
+
+**可以看到，代码清爽了很多，纵向发展，应用第一步第二步第三步...一眼就能够看出来，当然实现的逻辑是将原来的相关的模块用Promise包装起来，并且在原来回调函数执行的地方resolve即可，详细实现，欢迎查看项目源码**
+
+## 解决回调地狱之generator-thunk，generator-promise
+
+> 两种方式比较类似，都要用到es6中的generator。关于什么是generator，thunk函数，可以查看软大神关于[ECMAScript 6 入门](http://es6.ruanyifeng.com/),这里简要地讲述一下，其如何处理异步操作问题使得可以将异步行为写起来如同步般爽。
+
+``` javascript
+function timeOut1 () {
+  setTimeout(() => {
+    console.log(1111)
+     g.next()
+  }, 1000)
+}
+
+function timeOut2 () {
+  setTimeout(() => {
+    console.log(2222)
+  }, 200)
+}
+
+function * gen () {
+  yield timeOut1()
+  yield timeOut2()
+}
+
+let g = gen()
+g.next()
+
+```
+
+**上面的代码在过了200毫秒会log出2222，过了1秒钟之后log出1111**
+
+这，要😭了，你不是说generator写起来同步可以解决异步问题吗，为毛这里timeOut2没有在timeOut1之后执行呢，毕竟gen函数中看起来是希望这样的嘛。
+
+其实不然，timeOut2啥时候执行取决于
+
+``` javascript
+g.next()
+g.next()
+
+``` 
+试想两个函数几乎同时执行，那在定时器中当然是200毫秒后的timeOut2先打印出2222来，但是有没有办法，让timeOut2在timeOut1后执行呢？答案是有的
+
+``` javascript
+function timeOut1 () {
+  setTimeout(() => {
+    console.log(1111)
+  }, 1000)
+}
+
+function timeOut2 () {
+  setTimeout(() => {
+    console.log(2222)
+  }, 200)
+}
+
+function * gen () {
+  yield timeOut1()
+  yield timeOut2()
+}
+
+let g = gen()
+g.next()
+g.next()
+
+```
+可以看到我们在timeOut1执行完成之后，再将指针指向下一个位置，即timeOut2再去执行，这样的结果就和gen函数中两个yield的写起来同步感觉一样了。但是含有一个问题，如果涉及到很多个异步操作，我们是很难通过上面的方式将异步流程管理起来的。于是我们需要做下面一件事
+
+
+```javascript
+function co (fn) {
+  var gen = fn();
+
+  function next(err, data) {
+    var result = gen.next(data);
+    if (result.done) return;
+    result.value(next); // thunk和promise不同地方之一在这里， promise是result.value.then(next)
+  }
+
+  next();
+}
+
+```
+
+内部的next函数就是 thunk 的回调函数。next函数先将指针移到 generator 函数的下一步（gen.next方法），然后判断 generator 函数是否结束（result.done属性），如果没结束，就将next函数再传入 thunk 函数（result.value属性），否则就直接退出。
+
+**最后我们在看一下通过co函数的写法完成上面的例子**
+
+``` javascript
+function timeOut1() {
+  return (callback) => {
+    setTimeout(() => {
+      console.log(1111)
+      callback()
+    }, 1000)
+  }
+
+}
+
+function timeOut2() {
+  return (callback) => {
+    setTimeout(() => {
+      console.log(2222)
+      callback()
+    }, 200)
+  }
+}
+
+function co(fn) {
+  var gen = fn();
+
+  function next(err, data) {
+    var result = gen.next(data);
+    if (result.done) return;
+    result.value(next); // thunk和promise不同地方之一在这里， promise是result.value.then(next)
+  }
+
+  next();
+}
+
+co(function * () {
+  yield timeOut1()
+  yield timeOut2()
+})
+
+
+```
+
+## 解决回调地狱之async
+
+> async其实就是generator函数的语法糖。大家如果把generator弄明白了，使用它一定不再话下，关于这个项目的用法，欢迎查看async分支源代码，这里不再赘述。
+
+## 尾述
+
+> 本文中可能存在阐述不当的地方，欢迎大家指正。😀😀😀，最后点个赞，点个star好不好呀。
+[源码地址](https://github.com/qianlongo/resume-native)
+
+
+
+

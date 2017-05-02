@@ -3,10 +3,8 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-// const args = process.argv
-// const debug = args.indexOf('--debug') > -1
-// const build = args.indexOf('--build') > -1
-const build = true
+const args = process.argv
+const debug = args.indexOf('--debug') > -1
 const output = {
   path: path.resolve(__dirname, './dist'),
   filename: '[name].[hash].js'
@@ -21,7 +19,7 @@ const plugins = [
   new ExtractTextPlugin('[name].[hash].css')
 ]
 
-if (build) {
+if (!debug) {
   plugins.push(new webpack.optimize.UglifyJsPlugin())
 }
 

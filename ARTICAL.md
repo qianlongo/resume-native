@@ -220,7 +220,6 @@ showStylesWrap(0)
 function timeOut1 () {
   setTimeout(() => {
     console.log(1111)
-     g.next()
   }, 1000)
 }
 
@@ -236,6 +235,7 @@ function * gen () {
 }
 
 let g = gen()
+g.next()
 g.next()
 
 ```
@@ -257,6 +257,7 @@ g.next()
 function timeOut1 () {
   setTimeout(() => {
     console.log(1111)
+    g.next()
   }, 1000)
 }
 
@@ -272,7 +273,6 @@ function * gen () {
 }
 
 let g = gen()
-g.next()
 g.next()
 
 ```

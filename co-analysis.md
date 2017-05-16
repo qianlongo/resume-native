@@ -1,5 +1,9 @@
 ## 前言
 
+[原文地址](https://github.com/qianlongo/resume-native/blob/master/co-analysis.md)
+
+[源码地址](https://github.com/qianlongo/resume-native/)
+
 > 了解`co`的前提是已经知晓`generator`是什么，可以看软大神的[Generator 函数的语法](http://es6.ruanyifeng.com/#docs/generator),
 co是TJ大神写的能够使generator自动执行的函数库，而我们熟知的koa也用到了它管理异步流程控制，将异步任务书写同步化，爽的飞起，也摆脱了一直以来的回调地狱问题。
 

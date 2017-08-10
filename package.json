@@ -2,8 +2,8 @@
   "name": "resume-native",
   "version": "1.0.0",
   "scripts": {
-    "clean": "sudo rm -rf dist/*",
-    "dev": "npm run build && webpack-dev-server --debug",
+    "clean": "rm -rf dist/*",
+    "dev": "webpack-dev-server --debug",
     "build": "npm run clean && webpack",
     "lint": "standard",
     "validate": "npm ls"

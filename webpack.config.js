@@ -7,7 +7,7 @@ const args = process.argv
 const debug = args.indexOf('--debug') > -1
 const output = {
   path: path.resolve(__dirname, './dist'),
-  filename: '[name].[hash].js'
+  filename: '[name].[chunkhash].js'
 }
 
 const plugins = [
@@ -16,7 +16,7 @@ const plugins = [
     hash: true,
     template: path.resolve(__dirname, './lib/index.tpl.html')
   }),
-  new ExtractTextPlugin('[name].[hash].css')
+  new ExtractTextPlugin('[name].[chunkhash].css')
 ]
 
 if (!debug) {

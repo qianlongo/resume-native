@@ -26,11 +26,20 @@ if (!debug) {
 module.exports = {
   context: path.resolve(__dirname, './lib'),
   entry: {
-    app: './app.js'
+    app: './app.js',
+    vendors: ['vue']
   },
   output: output,
   module: {
     rules: [
+      {
+        test: /\.vue$/,
+        use: [
+          {
+            loader: 'vue-loader'
+          }
+        ]
+      },
       {
         test: /\.jsx?$/,
         exclude: [/node_modules/],

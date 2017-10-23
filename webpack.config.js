@@ -29,6 +29,9 @@ module.exports = {
     app: './app.js'
   },
   output: output,
+  resolve: {
+    modules: [path.resolve(__dirname, './lib'), 'node_modules']
+  },
   module: {
     rules: [
       {

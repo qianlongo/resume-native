@@ -39,6 +39,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       hash: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        conservativeCollapse: true
+      },
       template: path.resolve(__dirname, '../lib/index.tpl.html')
     }),
     new ExtractTextPlugin('[name].[chunkhash].css')

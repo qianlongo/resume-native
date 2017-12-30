@@ -44,7 +44,7 @@ module.exports = {
         collapseWhitespace: true,
         conservativeCollapse: true
       },
-      template: path.resolve(__dirname, '../lib/index.tpl.html')
+      template: path.resolve(__dirname, '../lib/template/index.html')
     }),
     new ExtractTextPlugin('[name].[chunkhash].css')
   ]

@@ -4,8 +4,8 @@
 
 [源码地址](https://github.com/qianlongo/resume-native/)
 
-> 了解`co`的前提是已经知晓`generator`是什么，可以看软大神的[Generator 函数的语法](http://es6.ruanyifeng.com/#docs/generator),
-co是TJ大神写的能够使generator自动执行的函数库，而我们熟知的koa也用到了它管理异步流程控制，将异步任务书写同步化，爽的飞起，也摆脱了一直以来的回调地狱问题。
+> 了解`co`的前提是已经知晓`generator`是什么，可以看软大神的[Generator 函数的语法](http://es6.ruanyifeng.com/#docs/generator),
+co是TJ大神写的能够使generator自动执行的函数库，而我们熟知的koa也用到了它管理异步流程控制，将异步任务书写同步化，爽的飞起，也摆脱了一直以来的回调地狱问题。
 
 
 ![](http://odssgnnpf.bkt.clouddn.com/ad51ce297e8dd51850842ff012bdc3cb.jpg)
@@ -150,7 +150,7 @@ co(function * (name) {
 
 ```
 
-从co函数的第二个参数开始，便是传入的generator函数可以接收的实参
+从co函数的第二个参数开始，便是传入的generator函数可以接收的实参
 
 ## 开始分析源码
 
@@ -176,7 +176,7 @@ function co(gen) {
 
 ```
 
-在Promise的内部，先执行了外部传入的`gen`,执行的结果如果不具备next属性(且要是一个函数)，就直接返回，并将执行成功回调`resolve(gen)`,否则得到的是一个指针对象。
+在Promise的内部，先执行了外部传入的`gen`,执行的结果如果不具备next属性(且要是一个函数)，就直接返回，并将执行成功回调`resolve(gen)`,否则得到的是一个指针对象。
 
 **接下来继续看...**
 
@@ -258,7 +258,7 @@ function toPromise(obj) {
   if (isPromise(obj)) return obj;
   // 如果是个generator函数或者generator生成器，那就像你自己调用co函数一样，手动传到co里面去执行
   if (isGeneratorFunction(obj) || isGenerator(obj)) return co.call(this, obj);
-  // 如果obj既不是Promise，也不是isGeneratorFunction和isGenerator，要是一个普通的函数（需要符合thunk函数规范），就将该函数包装成Promise的形式
+  // 如果obj既不是Promise，也不是isGeneratorFunction和isGenerator，要是一个普通的函数（需要符合thunk函数规范），就将该函数包装成Promise的形式
   if ('function' == typeof obj) return thunkToPromise.call(this, obj);
   // 如果是一个数组的形式，就去arrayToPromise包装一番
   if (Array.isArray(obj)) return arrayToPromise.call(this, obj);
@@ -313,12 +313,12 @@ function isGenerator(obj) {
 }
 ```
 
-**判断的条件也比较直接，需要符合两个条件，一个是obj.next要是一个函数，一个是obj.throw要是一个函数**
+**判断的条件也比较直接，需要符合两个条件，一个是obj.next要是一个函数，一个是obj.throw要是一个函数**
 
 
 **接下来继续看**
 
-如果obj既不是Promise，也不是isGeneratorFunction和isGenerator，要是一个普通的函数，就将该函数包装成Promise的形式，这里我们主要需要看`thunkToPromise`
+如果obj既不是Promise，也不是isGeneratorFunction和isGenerator，要是一个普通的函数，就将该函数包装成Promise的形式，这里我们主要需要看`thunkToPromise`
 
 ``` javascript
 function thunkToPromise(fn) {
@@ -327,7 +327,7 @@ function thunkToPromise(fn) {
   return new Promise(function (resolve, reject) {
       // 执行这个thunk函数
     fn.call(ctx, function (err, res) { 
-      // 注意thunk函数内部接收的回调函数中传入的第一个参数是err，出现了err，当然需要走reject了
+      // 注意thunk函数内部接收的回调函数中传入的第一个参数是err，出现了err，当然需要走reject了
       if (err) return reject(err); 
       // 参数是两个以上的情况下，将参数整成一个数组
       if (arguments.length > 2) res = slice.call(arguments, 1);
@@ -386,7 +386,7 @@ function objectToPromise(obj){
 
 ## 结尾
 
-> 到这里，co源码分析就告一段落了。总感觉有些没有说到位，欢迎大家拍砖，晚安。
+> 到这里，co源码分析就告一段落了。总感觉有些没有说到位，欢迎大家拍砖，晚安。
 
 
 

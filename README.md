@@ -12,6 +12,12 @@
   <a href="https://www.zhihu.com/people/qian-duan-pang-tou-yu"><img src="https://img.shields.io/badge/zhihu-知乎-informational" alt="投稿"></a>
  </p>
 
+
+  <a name="微信"></a>  <a name="公众号"></a>
+
+
+![](./wx.png)
+
 ## 简要说明
 
 > 一个好玩的会动的简历 O(∩_∩)O哈哈~，通过`callback`、`promise`、`generator`、`async`四种方式分别实现。

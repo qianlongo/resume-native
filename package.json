@@ -11,7 +11,7 @@
   "author": "qianlongo",
   "license": "MIT",
   "dependencies": {
-    "marked": "^0.3.6",
+    "marked": "^4.0.10",
     "prismjs": "^1.6.0"
   },
   "devDependencies": {
